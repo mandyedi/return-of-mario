@@ -80,7 +80,9 @@ function startGame() {
             let tilePosBottom   = Vector(tilePosPlayer.x, tilePosPlayer.y + 2);
             let tilePosDiag     = Vector(tilePosPlayer.x + 1, tilePosPlayer.y + 2);
             let tileTypePlayer  = tileEngine.tileAtLayer('groundLayer', {row: tilePosPlayer.y, col: tilePosPlayer.x});
+            tileTypePlayer     += tileEngine.tileAtLayer('groundLayer', {row: tilePosPlayer.y + 1, col: tilePosPlayer.x});
             let tileTypeRight   = tileEngine.tileAtLayer('groundLayer', {row: tilePosRight.y, col: tilePosRight.x});
+            tileTypeRight      += tileEngine.tileAtLayer('groundLayer', {row: tilePosRight.y + 1, col: tilePosRight.x});
             let tileTypeBottom  = tileEngine.tileAtLayer('groundLayer', {row: tilePosBottom.y, col: tilePosBottom.x});
             let tileTypeDiag    = tileEngine.tileAtLayer('groundLayer', {row: tilePosDiag.y, col: tilePosDiag.x});;
 
@@ -110,7 +112,7 @@ function startGame() {
                 }
             }
             else if (this.dx < 0) {
-                if (tileTypePlayer && !tileTypeRight) {
+                if (tileTypePlayer /*&& !tileTypeRight*/) {
                     this.x = (tilePosPlayer.x + 1) * tileEngine.tilewidth;
                     this.dx = 0;
                 }
