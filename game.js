@@ -82,6 +82,8 @@ function startGame() {
                 this.jumping = true;
             }
             
+            // Calculate tile type next to player
+            // If tile type biger then zerom there is a collision
             let tilePosPlayer   = Vector(this.x / tileEngine.tilewidth | 0, this.y / tileEngine.tileheight | 0);
             let tilePosRight    = Vector(tilePosPlayer.x + 1, tilePosPlayer.y);
             let tilePosBottom   = Vector(tilePosPlayer.x, tilePosPlayer.y + 2);
@@ -93,6 +95,7 @@ function startGame() {
             let tileTypeBottom  = tileEngine.tileAtLayer('groundLayer', {row: tilePosBottom.y, col: tilePosBottom.x});
             let tileTypeDiag    = tileEngine.tileAtLayer('groundLayer', {row: tilePosDiag.y, col: tilePosDiag.x});;
 
+            // Check vertically if there is a collision
             if (this.dy > 0) {
                 if (tileTypeBottom || (tileTypeDiag && !tileTypeRight)) {
                     this.y = (tilePosBottom.y - 2 ) * tileEngine.tileheight;
@@ -112,6 +115,7 @@ function startGame() {
                 }
             }
 
+            // Check horizontally if there is a collision
             if (this.dx > 0) {
                 if (tileTypeRight && !tileTypePlayer) {
                     this.x = tilePosPlayer.x * tileEngine.tilewidth;
@@ -126,8 +130,10 @@ function startGame() {
                     this.x = (tilePosPlayer.x + 1) * tileEngine.tilewidth;
                     this.dx = 0;
                 }
-                else if (this.x > canvas.width / 2) {
-                    tileEngine.sx -= speed;
+                // Prevent player go back to left
+                if (this.x < tileEngine.sx) {
+                    this.x = tileEngine.sx;
+                    this.dx = 0;
                 }
             }
 
@@ -135,6 +141,7 @@ function startGame() {
             this.advance();
 
             debugText.text = 'player pos: ' + this.x.toFixed(2) + ' ' + this.y.toFixed(2);
+            debugText.text += '\ntileEngine.sx: ' + tileEngine.sx;
             debugText.text += '\ntileCoord: ' + tilePosPlayer.x + ' ' + tilePosPlayer.y;
             debugText.text += '\ntileTypePlayer: ' + tileTypePlayer;
             debugText.text += '\ntileTypeRight: ' + tileTypeRight;
@@ -144,7 +151,7 @@ function startGame() {
 
     tileEngine.addObject(player);
 
-    player.position.clamp(0, 0, mapWidth - player.width, mapHeight - player.height);
+    // player.position.clamp(0, 0, mapWidth - player.width, mapHeight - player.height);
 
     let gridSprite = kontra.Sprite({
         x: 0,
