@@ -1,6 +1,6 @@
 let { init, TileEngine, dataAssets, imageAssets, GameLoop, Vector } = kontra;
 
-kontra.init();
+let { canvas } = kontra.init();
 kontra.initKeys();
 
 // Setup asset load
@@ -26,7 +26,14 @@ kontra.load(
 });
 
 function startGame() {
-    let tileEngine = TileEngine(dataAssets['assets/map']);
+    let map = dataAssets['assets/map'];
+    let mapWidth = map.width * map.tilewidth;
+    let mapHeight = map.height * map.tileheight;
+
+    let tileEngine = TileEngine(map);
+
+    tileEngine.sx = 0;
+    tileEngine.sy = 0;
 
     let debugText = kontra.Text({
         text: '',
@@ -38,8 +45,8 @@ function startGame() {
     });
 
     let player = kontra.Sprite({
-        x: 140,
-        y: 288,
+        x: canvas.width / 2 - 32,
+        y: 576,
         width:64,
         height: 128,
         
@@ -110,11 +117,17 @@ function startGame() {
                     this.x = tilePosPlayer.x * tileEngine.tilewidth;
                     this.dx = 0;
                 }
+                else if (this.x > canvas.width / 2) {
+                    tileEngine.sx += speed;
+                }
             }
             else if (this.dx < 0) {
-                if (tileTypePlayer /*&& !tileTypeRight*/) {
+                if (tileTypePlayer && !tileTypeRight) {
                     this.x = (tilePosPlayer.x + 1) * tileEngine.tilewidth;
                     this.dx = 0;
+                }
+                else if (this.x > canvas.width / 2) {
+                    tileEngine.sx -= speed;
                 }
             }
 
@@ -128,6 +141,10 @@ function startGame() {
             debugText.text += '\ntileTypeBottom: ' + tileTypeBottom;           
         }
     });
+
+    tileEngine.addObject(player);
+
+    player.position.clamp(0, 0, mapWidth - player.width, mapHeight - player.height);
 
     let gridSprite = kontra.Sprite({
         x: 0,
@@ -159,7 +176,7 @@ function startGame() {
             tileEngine.render();
             player.render();
 
-            gridSprite.render();
+            // gridSprite.render();
             debugText.render();
         }
     });
