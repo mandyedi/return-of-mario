@@ -16,7 +16,8 @@ kontra.load(
     'assets/tiles.png',
     'assets/map_tileset.json',
     'assets/map.json',
-    'assets/player_big.png'
+    'assets/player_big.png',
+    'assets/enemy.png'
 ).then(assets => {
     // TODO: all assets have loaded
     startGame();
@@ -44,6 +45,69 @@ function startGame() {
         textAlign: 'center'
     });
 
+    let enemy = kontra.Sprite({
+        x: canvas.width / 2 - 32,
+        y: 383,
+        width:64,
+        height: 128,
+        
+        // Velocity
+        dx: 0,
+        dy: 0,
+        // Acceleration
+        ddx: 0,
+        ddy: 0,
+
+        image: imageAssets['assets/enemy'],
+
+        // Custom paramters
+        speed: 96,
+
+        update(dt) {
+            this.dx = this.speed * dt; // speed
+            this.ddy = 64 * dt; // gravity
+            
+            // Calculate tile type next to player
+            // If tile type biger then zerom there is a collision
+            let tilePosPlayer   = Vector(this.x / tileEngine.tilewidth | 0, this.y / tileEngine.tileheight | 0);
+            let tilePosRight    = Vector(tilePosPlayer.x + 1, tilePosPlayer.y);
+            let tilePosBottom   = Vector(tilePosPlayer.x, tilePosPlayer.y + 1);
+            let tilePosDiag     = Vector(tilePosPlayer.x + 1, tilePosPlayer.y + 1);
+            let tileTypePlayer  = tileEngine.tileAtLayer('groundLayer', {row: tilePosPlayer.y, col: tilePosPlayer.x});
+            let tileTypeRight   = tileEngine.tileAtLayer('groundLayer', {row: tilePosRight.y, col: tilePosRight.x});
+            let tileTypeBottom  = tileEngine.tileAtLayer('groundLayer', {row: tilePosBottom.y, col: tilePosBottom.x});
+            let tileTypeDiag    = tileEngine.tileAtLayer('groundLayer', {row: tilePosDiag.y, col: tilePosDiag.x});;
+
+            // Check vertically if there is a collision
+            if (this.dy > 0) {
+                if (tileTypeBottom || (tileTypeDiag && !tileTypeRight)) {
+                    this.y = (tilePosBottom.y - 1 ) * tileEngine.tileheight;
+                    this.dy = 0;
+                    this.ddy = 0;
+                }
+            }
+
+            // Check horizontally if there is a collision
+            if (this.dx > 0) {
+                if (tileTypeRight && !tileTypePlayer) {
+                    this.x = tilePosPlayer.x * tileEngine.tilewidth;
+                    this.dx = 0
+                    this.speed = -this.speed;
+                }
+            }
+            else if (this.dx < 0) {
+                if (tileTypePlayer && !tileTypeRight) {
+                    this.x = (tilePosPlayer.x + 1) * tileEngine.tilewidth;
+                    this.dx = 0;
+                    this.speed = -this.speed;
+                }
+            }
+
+            // TODO: clamp dx, dy
+            this.advance();        
+        }
+    });
+
     let player = kontra.Sprite({
         x: canvas.width / 2 - 32,
         y: 576,
@@ -60,8 +124,6 @@ function startGame() {
         image: imageAssets['assets/player_big'],
 
         // Custom paramteres
-        desiredPosition: Vector(0, 0),
-        onGround: false,
         jumping: false,
         falling: false,
 
@@ -141,7 +203,7 @@ function startGame() {
             this.advance();
 
             debugText.text = 'player pos: ' + this.x.toFixed(2) + ' ' + this.y.toFixed(2);
-            debugText.text += '\ntileEngine.sx: ' + tileEngine.sx;
+            debugText.text += '\ntileEngine.sx: ' + tileEngine.sx.toFixed(2);
             debugText.text += '\ntileCoord: ' + tilePosPlayer.x + ' ' + tilePosPlayer.y;
             debugText.text += '\ntileTypePlayer: ' + tileTypePlayer;
             debugText.text += '\ntileTypeRight: ' + tileTypeRight;
@@ -150,6 +212,7 @@ function startGame() {
     });
 
     tileEngine.addObject(player);
+    tileEngine.addObject(enemy);
 
     // player.position.clamp(0, 0, mapWidth - player.width, mapHeight - player.height);
 
@@ -178,10 +241,22 @@ function startGame() {
     let loop = GameLoop({
         update: function(dt) {
             player.update(dt);
+
+            if (enemy.isAlive()) {
+                enemy.update(dt);
+            }
+
+            if (kontra.collides(player, enemy)) {
+                enemy.ttl = 0;
+            }
         },
         render: function() {
             tileEngine.render();
             player.render();
+
+            if (enemy.isAlive()) {
+                enemy.render();
+            }
 
             // gridSprite.render();
             debugText.render();
