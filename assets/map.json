@@ -32,9 +32,42 @@
          "width":30,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":6,
+         "name":"enemies",
+         "objects":[
+                {
+                 "height":64,
+                 "id":1,
+                 "name":"enemy1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":448,
+                 "y":384
+                }, 
+                {
+                 "height":64,
+                 "id":2,
+                 "name":"enemy2",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":1152,
+                 "y":640
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":6,
- "nextobjectid":1,
+ "nextlayerid":8,
+ "nextobjectid":3,
  "orientation":"orthogonal",
  "renderorder":"left-down",
  "tiledversion":"1.4.2",
