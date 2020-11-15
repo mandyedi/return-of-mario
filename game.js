@@ -1,3 +1,41 @@
+/*
+TODO:
+Organize source code. Use separate files for different entities and logic.
+Use modulesm export, import.
+
+Add spritesheet for player and entities.
+
+Fix collision test.
+Return info about the colided side of the enemy or tile.
+https://www.raywenderlich.com/2554-sprite-kit-tutorial-how-to-make-a-platform-game-like-super-mario-brothers-part-1
+
+Destroy tiles.
+
+Tiles with items.
+
+Kill enemies only when jumped on it.
+
+PLayer states: small and big.
+
+Tube takes the player to bonus level.
+
+Add trigger option to enemies: enemy start moving when appears in the canvas.
+
+Use Kontra scene.
+Welcome scene, game scene, game over scene.
+Scene also has cullObjects feature but need to look up that how it affects the enemy trigger feature.
+
+Game over.
+Times up, player falls, collides with enemy.
+
+HUD (Heads Up Display).
+Score, coins, world, time, lives.
+
+Draw own graphics.
+
+Build full level.
+*/
+
 let { init, TileEngine, dataAssets, imageAssets, GameLoop, Vector } = kontra;
 
 let { canvas } = kontra.init();
