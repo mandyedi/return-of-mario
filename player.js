@@ -3,9 +3,11 @@ import { Rect, rectIntersection, rectIntersectsRect } from './rect.js';
 export default function createPlayer(tileEngine) {
     let canvas = kontra.getCanvas();
 
+    let playerObject = tileEngine.layerMap['player'].objects[0];
+
     let player = kontra.Sprite({
-        x: 128,
-        y: 570,
+        x: playerObject.x,
+        y: playerObject.y,
         width:64,
         height: 128,
         
