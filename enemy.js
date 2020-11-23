@@ -1,3 +1,5 @@
+import { Rect, rectIntersection, rectIntersectsRect } from './rect.js';
+
 export default function createEnemies(tileEngine) {
     let enemies = [];
 
@@ -19,6 +21,10 @@ export default function createEnemies(tileEngine) {
     
             // Custom paramters
             speed: 96,
+
+            getRect() {
+                return new Rect(this.x, this.y, this.width, this.height);
+            },
     
             update(dt) {
                 this.dx = this.speed * dt; // speed

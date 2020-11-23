@@ -3,15 +3,9 @@ TODO:
 
 Add spritesheet for player and entities.
 
-Fix collision test.
-Return info about the colided side of the enemy or tile.
-https://www.raywenderlich.com/2554-sprite-kit-tutorial-how-to-make-a-platform-game-like-super-mario-brothers-part-1
-
 Destroy tiles.
 
 Tiles with items.
-
-Kill enemies only when jumped on it.
 
 PLayer states: small and big.
 
@@ -42,6 +36,7 @@ let canvas = kontra.getCanvas();
 import createPlayer from './player.js';
 import createEnemies from './enemy.js';
 import createDebugGrid from './debug.js';
+import { rectIntersectsRect, intersectionSide } from './rect.js';
 
 // Setup asset load
 let numAssets = 1;
@@ -67,6 +62,9 @@ kontra.load(
     // TODO: handle error
 });
 
+// TODO: refactor
+// Use refine collision (player's solution)
+// Move it into enemy
 function testEnemyCollisionWithGroundLayer(sprite, tileEngine) {
     // Calculate tile type next to player
     // If tile type biger then zerom there is a collision
@@ -131,8 +129,16 @@ function startGame() {
                 enemy.update(dt);
                 testEnemyCollisionWithGroundLayer(enemy, tileEngine);
 
-                if (kontra.collides(player, enemy)) {
-                    enemy.ttl = 0;
+                let rectPlayer = player.getRect();
+                let rectEnemy = enemy.getRect();
+                if (rectIntersectsRect(rectPlayer, rectEnemy)) {
+                    if (intersectionSide(rectPlayer, rectEnemy) == 'top') {
+                        enemy.ttl = 0;
+                    }
+                    else {
+                        // TODO: handle game over
+                    }
+                    
                 }
             });
 

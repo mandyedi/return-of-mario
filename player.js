@@ -21,6 +21,10 @@ export default function createPlayer(tileEngine) {
         // Custom paramteres
         jumping: false,
 
+        getRect() {
+            return new Rect(this.x, this.y, this.width, this.height);
+        },
+
         update(dt) {
             this.dx = 0;
             this.ddy = 64 * dt; // gravity

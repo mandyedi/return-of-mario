@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Rect, rectIntersectsRect, rectIntersection } from '../rect.js'
+import { Rect, rectIntersectsRect, rectIntersection, intersectionSide } from '../rect.js'
 
 let r1 = new Rect(2, 1, 4, 3);
 let r2 = new Rect(7, 3, 5, 8);
@@ -30,6 +30,34 @@ describe('Rect', () => {
         assert.strictEqual(r.y, 3);
         assert.strictEqual(r.width, 2);
         assert.strictEqual(r.height, 1);
+    });
+
+    it('should intersect on left', () => {
+      let r1 = new Rect(0, 1, 6, 6);
+      let r2 = new Rect(5, 5, 10, 10);
+      let side = intersectionSide(r1, r2);
+      assert.strictEqual(side, 'left');
+    });
+
+    it('should intersect on top', () => {
+      let r1 = new Rect(3, 1, 7, 7);
+      let r2 = new Rect(5, 5, 10, 10);
+      let side = intersectionSide(r1, r2);
+      assert.strictEqual(side, 'top');
+    });
+
+    it('should intersect on right', () => {
+      let r1 = new Rect(14, 3, 6, 13);
+      let r2 = new Rect(5, 5, 10, 10);
+      let side = intersectionSide(r1, r2);
+      assert.strictEqual(side, 'right');
+    });
+
+    it('should intersect on bottom', () => {
+      let r1 = new Rect(4, 14, 7, 7);
+      let r2 = new Rect(5, 5, 10, 10);
+      let side = intersectionSide(r1, r2);
+      assert.strictEqual(side, 'bottom');
     });
   });
 });
