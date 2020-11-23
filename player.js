@@ -1,9 +1,11 @@
+import { Rect, rectIntersection, rectIntersectsRect } from './rect.js';
+
 export default function createPlayer(tileEngine) {
     let canvas = kontra.getCanvas();
 
     let player = kontra.Sprite({
-        x: canvas.width / 2 - 32,
-        y: 576,
+        x: 128,
+        y: 570,
         width:64,
         height: 128,
         
@@ -18,7 +20,6 @@ export default function createPlayer(tileEngine) {
 
         // Custom paramteres
         jumping: false,
-        falling: false,
 
         update(dt) {
             this.dx = 0;
@@ -27,73 +28,82 @@ export default function createPlayer(tileEngine) {
             let speed = 512 * dt;
             if(kontra.keyPressed('right')) {
                 this.dx = speed;
+                if (this.x > canvas.width / 2) {
+                    tileEngine.sx += speed;
+                }
             }
             if(kontra.keyPressed('left')) {
                 this.dx = -speed;
             }
 
-            if(kontra.keyPressed('up') && !this.jumping && !this.falling) {
+            if(kontra.keyPressed('up') && !this.jumping) {
                 this.ddy -= 1450 * dt;  // jump impulse
                 this.jumping = true;
             }
 
-            // TODO: clamp dx, dy
             this.advance();
-            
-            // Calculate tile type next to player
-            // If tile type biger then zerom there is a collision
-            let tilePosPlayer   = kontra.Vector(this.x / tileEngine.tilewidth | 0, this.y / tileEngine.tileheight | 0);
-            let tilePosRight    = kontra.Vector(tilePosPlayer.x + 1, tilePosPlayer.y);
-            let tilePosBottom   = kontra.Vector(tilePosPlayer.x, tilePosPlayer.y + 2);
-            let tilePosDiag     = kontra.Vector(tilePosPlayer.x + 1, tilePosPlayer.y + 2);
-            let tileTypePlayer  = tileEngine.tileAtLayer('groundLayer', {row: tilePosPlayer.y, col: tilePosPlayer.x});
-            tileTypePlayer     += tileEngine.tileAtLayer('groundLayer', {row: tilePosPlayer.y + 1, col: tilePosPlayer.x});
-            let tileTypeRight   = tileEngine.tileAtLayer('groundLayer', {row: tilePosRight.y, col: tilePosRight.x});
-            tileTypeRight      += tileEngine.tileAtLayer('groundLayer', {row: tilePosRight.y + 1, col: tilePosRight.x});
-            let tileTypeBottom  = tileEngine.tileAtLayer('groundLayer', {row: tilePosBottom.y, col: tilePosBottom.x});
-            let tileTypeDiag    = tileEngine.tileAtLayer('groundLayer', {row: tilePosDiag.y, col: tilePosDiag.x});;
 
-            // Check vertically if there is a collision
-            if (this.dy > 0) {
-                if (tileTypeBottom || (tileTypeDiag && !tileTypeRight)) {
-                    this.y = (tilePosBottom.y - 2 ) * tileEngine.tileheight;
-                    this.dy = 0;
-                    this.ddy = 0;
-                    this.falling = false;
-                    this.jumping = false;
-                }
-            }
-            else if (this.dy < 0) {
-                if ((tileTypePlayer && !tileTypeBottom) || (tileTypeRight && !tileTypeDiag)) {
-                    this.y = (tilePosPlayer.y + 1) * tileEngine.tileheight;
-                    this.dy = 0;
-                    // TODO: Original implementation had 1x1 tile for player, not sure if this is going to work with 1x2 player
-                    tileTypePlayer = tileTypeBottom;
-                    tileTypeRight = tileTypeDiag;
+            // Check and resolve collision
+            let playerRect = new Rect(player.x, player.y, player.width, player.height);
+            let playerCoord = kontra.Vector(this.x / tileEngine.tilewidth | 0, this.y / tileEngine.tileheight | 0);
+            let indices = [4, 0, 2, 3, 1, 5];
+            for (let i = 0; i < 6; i++) {
+                let tileIndex = indices[i];
+
+                let tileColumn = tileIndex % 2;
+                let tileRow = tileIndex / 2 | 0;
+                let tileCoord = kontra.Vector(playerCoord.x + tileColumn, playerCoord.y + tileRow);
+                let gid = tileEngine.tileAtLayer('groundLayer', {row: tileCoord.y, col: tileCoord.x});
+
+                if (gid != 0) {
+                    let tileRect = new Rect(
+                        tileCoord.x * tileEngine.tilewidth,
+                        tileCoord.y * tileEngine.tileheight,
+                        tileEngine.tilewidth,
+                        tileEngine.tileheight );
+
+                    if (rectIntersectsRect(playerRect, tileRect)) {
+                        let intersection = rectIntersection(playerRect, tileRect);
+                        
+                        if (tileIndex == 2) {
+                            // Tile is left
+                            this.x += intersection.width;
+                        }
+                        else if (tileIndex == 3) {
+                            // Tile is right
+                            this.x -= intersection.width;
+                        }
+                        else {
+                            if (intersection.width > intersection.height) {
+                                // Intersection happens below or above
+                                this.dy = 0;
+                                if (tileIndex > 3) {
+                                    this.jumping = false;
+                                    this.y -= intersection.height;
+                                }
+                                else {
+                                    this.y += intersection.height;
+                                }
+                            }
+                            else {
+                                // Intersection happens left or right
+                                if (tileIndex == 0 || tileIndex == 4) {
+                                    this.x += intersection.width;
+                                }
+                                else {
+                                    this.x -= intersection.width;
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
-            // Check horizontally if there is a collision
-            if (this.dx > 0) {
-                if (tileTypeRight && !tileTypePlayer) {
-                    this.x = tilePosPlayer.x * tileEngine.tilewidth;
-                    this.dx = 0;
-                }
-                else if (this.x > canvas.width / 2) {
-                    tileEngine.sx += speed;
-                }
-            }
-            else if (this.dx < 0) {
-                if (tileTypePlayer && !tileTypeRight) {
-                    this.x = (tilePosPlayer.x + 1) * tileEngine.tilewidth;
-                    this.dx = 0;
-                }
-                // Prevent player go back to left
-                if (this.x < tileEngine.sx) {
-                    this.x = tileEngine.sx;
-                    this.dx = 0;
-                }
-            }         
+            // Prevent player go back to left
+            if (this.x < tileEngine.sx) {
+                this.x = tileEngine.sx;
+                this.dx = 0;
+            }     
         }
     });
 
