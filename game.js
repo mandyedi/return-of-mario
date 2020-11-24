@@ -1,31 +1,56 @@
 /*
 TODO:
 
-Add spritesheet for player and entities.
+-
+- Game Off release
+- 
 
-Destroy tiles.
+Graphics
+  Ground
+  Brick - unbreakable
+  Brick - breakable
+  Brick - bonus
+  Player - big
+  Enemy - little
+  Background - Space with stars
+  Background - Earth
+  Background - Mountain
+  Background - Rock
+  Base
+  Pipe
+  Coin
 
-Tiles with items.
+Animated
+  Player
+  Enemy
+  Brick - breakable
+  Brick - bonus
+  Coin
 
-PLayer states: small and big.
+Reduce tile size to 32.
 
-Tube takes the player to bonus level.
+Build full level.
 
 Add trigger option to enemies: enemy start moving when appears in the canvas.
+
+HUD (Heads Up Display).
+Score, coins, world, time, lives.
+
+Game over.
+Times up, player falls, collides with enemy.
 
 Use Kontra scene.
 Welcome scene, game scene, game over scene.
 Scene also has cullObjects feature but need to look up that how it affects the enemy trigger feature.
 
-Game over.
-Times up, player falls, collides with enemy.
+-
+- Future
+-
 
-HUD (Heads Up Display).
-Score, coins, world, time, lives.
+PLayer states: small and big.
 
-Draw own graphics.
+Pipe takes the player to bonus level.
 
-Build full level.
 */
 
 kontra.init();
