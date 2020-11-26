@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Rect, rectIntersectsRect, rectIntersection, intersectionSide } from '../rect.js'
+import { Rect, rectIntersectsRect, rectIntersection, intersectionSide } from '../src/rect.js'
 
 let r1 = new Rect(2, 1, 4, 3);
 let r2 = new Rect(7, 3, 5, 8);
