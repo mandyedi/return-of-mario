@@ -6,18 +6,10 @@ TODO:
 - 
 
 Graphics
-  Ground
-  Brick - unbreakable
-  Brick - breakable
-  Brick - bonus
-  Player - big
-  Enemy - little
   Background - Space with stars
   Background - Earth
   Background - Mountain
   Background - Rock
-  Base
-  Pipe
   Coin
 
 Animated
@@ -74,11 +66,10 @@ kontra.on('assetLoaded', (asset, url) => {
 
 kontra.load(
     'assets/tiles.png',
-    'assets/map_tileset.json',
+    // 'assets/map_tileset.json',
     'assets/map.json',
     'assets/player_big.png',
     'assets/enemy1.png',
-    'assets/enemy2.png'
 ).then(assets => {
     // TODO: all assets have loaded
     startGame();
@@ -97,10 +88,10 @@ function testEnemyCollisionWithGroundLayer(sprite, tileEngine) {
     let tilePosRight    = kontra.Vector(tilePosPlayer.x + 1, tilePosPlayer.y);
     let tilePosBottom   = kontra.Vector(tilePosPlayer.x, tilePosPlayer.y + 1);
     let tilePosDiag     = kontra.Vector(tilePosPlayer.x + 1, tilePosPlayer.y + 1);
-    let tileTypePlayer  = tileEngine.tileAtLayer('groundLayer', {row: tilePosPlayer.y, col: tilePosPlayer.x});
-    let tileTypeRight   = tileEngine.tileAtLayer('groundLayer', {row: tilePosRight.y, col: tilePosRight.x});
-    let tileTypeBottom  = tileEngine.tileAtLayer('groundLayer', {row: tilePosBottom.y, col: tilePosBottom.x});
-    let tileTypeDiag    = tileEngine.tileAtLayer('groundLayer', {row: tilePosDiag.y, col: tilePosDiag.x});;
+    let tileTypePlayer  = tileEngine.tileAtLayer('ground', {row: tilePosPlayer.y, col: tilePosPlayer.x});
+    let tileTypeRight   = tileEngine.tileAtLayer('ground', {row: tilePosRight.y, col: tilePosRight.x});
+    let tileTypeBottom  = tileEngine.tileAtLayer('ground', {row: tilePosBottom.y, col: tilePosBottom.x});
+    let tileTypeDiag    = tileEngine.tileAtLayer('ground', {row: tilePosDiag.y, col: tilePosDiag.x});;
 
     // Check vertically if there is a collision
     if (sprite.dy > 0) {
@@ -179,7 +170,7 @@ function startGame() {
             enemies = enemies.filter(enemy => enemy.isAlive());
             enemies.map(enemy => enemy.render());
 
-            gridSprite.render();
+            // gridSprite.render();
         }
     });
 

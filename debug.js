@@ -8,8 +8,8 @@ export default function createDebugGrid(tileEngine) {
         render: function() {
           this.context.strokeStyle = 'white';
           this.context.beginPath();
-          for (let x = 0; x < this.width; x += 64 ) {
-              for (let y = 0; y < this.height; y += 64 ) {
+          for (let x = 0; x < this.width; x += 32 ) {
+              for (let y = 0; y < this.height; y += 32 ) {
                 this.context.moveTo(0, y);
                 this.context.lineTo(this.width, y);
                 this.context.moveTo(x, 0);

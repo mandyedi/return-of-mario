@@ -8,8 +8,8 @@ export default function createPlayer(tileEngine) {
     let player = kontra.Sprite({
         x: playerObject.x,
         y: playerObject.y,
-        width:64,
-        height: 128,
+        width:32,
+        height: 64,
         
         // Velocity
         dx: 0,
@@ -29,9 +29,9 @@ export default function createPlayer(tileEngine) {
 
         update(dt) {
             this.dx = 0;
-            this.ddy = 64 * dt; // gravity
+            this.ddy = 32 * dt; // gravity
 
-            let speed = 512 * dt;
+            let speed = 256 * dt;
             if(kontra.keyPressed('right')) {
                 this.dx = speed;
                 if (this.x > canvas.width / 2) {
@@ -43,7 +43,7 @@ export default function createPlayer(tileEngine) {
             }
 
             if(kontra.keyPressed('up') && !this.jumping) {
-                this.ddy -= 1450 * dt;  // jump impulse
+                this.ddy -= 740 * dt;  // jump impulse
                 this.jumping = true;
             }
 
@@ -59,7 +59,7 @@ export default function createPlayer(tileEngine) {
                 let tileColumn = tileIndex % 2;
                 let tileRow = tileIndex / 2 | 0;
                 let tileCoord = kontra.Vector(playerCoord.x + tileColumn, playerCoord.y + tileRow);
-                let gid = tileEngine.tileAtLayer('groundLayer', {row: tileCoord.y, col: tileCoord.x});
+                let gid = tileEngine.tileAtLayer('ground', {row: tileCoord.y, col: tileCoord.x});
 
                 if (gid != 0) {
                     let tileRect = new Rect(
