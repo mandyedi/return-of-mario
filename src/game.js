@@ -7,7 +7,6 @@ TODO:
 
 Graphics
   Background - Space with stars
-  Background - Earth
   Background - Mountain
   Background - Rock
   Coin
@@ -70,6 +69,7 @@ kontra.load(
     'assets/map.json',
     'assets/player_big.png',
     'assets/enemy1.png',
+    'assets/earth.png',
 ).then(assets => {
     // TODO: all assets have loaded
     startGame();
@@ -137,6 +137,14 @@ function startGame() {
     let gridSprite = createDebugGrid(tileEngine);
     tileEngine.addObject(gridSprite);
 
+    let earth = kontra.Sprite({
+        x: 500,
+        y: 100,
+        width: 128,
+        height: 69,
+        image: kontra.imageAssets['assets/earth']
+    });
+
     let loop = kontra.GameLoop({
         update: function(dt) {
             player.update(dt);
@@ -164,6 +172,8 @@ function startGame() {
 
         },
         render: function() {
+            earth.render();
+
             tileEngine.render();
             player.render();
 
