@@ -174,7 +174,8 @@ function startGame() {
         render: function() {
             earth.render();
 
-            tileEngine.render();
+            tileEngine.renderLayer("ground");
+            tileEngine.renderLayer("background");
             player.render();
 
             enemies = enemies.filter(enemy => enemy.isAlive());

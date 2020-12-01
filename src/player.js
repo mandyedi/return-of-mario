@@ -89,6 +89,13 @@ export default function createPlayer(tileEngine) {
                                 }
                                 else {
                                     this.y += intersection.height;
+                                    // This little hack is because set tile to 0 is not works as intended.
+                                    // Setting it to 0 only affects the layer's data array, but keeps the tile imaged on canvas.
+                                    // My solution is to use tha background layer (player and enemies do not collide with it) with a tile that has the same color then the backgroun.
+                                    if ( tileEngine.tileAtLayer("ground", {row: tileCoord.y, col: tileCoord.x}) == 3) {
+                                        tileEngine.setTileAtLayer('ground', {row: tileCoord.y, col: tileCoord.x}, 0);
+                                        tileEngine.setTileAtLayer('background', {row: tileCoord.y, col: tileCoord.x}, 7);
+                                    }
                                 }
                             }
                             else {
