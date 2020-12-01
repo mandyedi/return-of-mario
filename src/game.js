@@ -14,11 +14,8 @@ Graphics
 Animated
   Player
   Enemy
-  Brick - breakable
   Brick - bonus
   Coin
-
-Reduce tile size to 32.
 
 Build full level.
 
@@ -41,6 +38,9 @@ Scene also has cullObjects feature but need to look up that how it affects the e
 PLayer states: small and big.
 
 Pipe takes the player to bonus level.
+
+Create particle system for brick animation.
+Support multiple brick destroy.
 
 */
 
@@ -65,11 +65,11 @@ kontra.on('assetLoaded', (asset, url) => {
 
 kontra.load(
     'assets/tiles.png',
-    // 'assets/map_tileset.json',
     'assets/map.json',
     'assets/player_big.png',
     'assets/enemy1.png',
     'assets/earth.png',
+    'assets/brick_animation.png'
 ).then(assets => {
     // TODO: all assets have loaded
     startGame();
@@ -127,11 +127,32 @@ function startGame() {
     tileEngine.sx = 0;
     tileEngine.sy = 0;
 
+    // Destroyable brick animation
+    let brickSpriteSheet = kontra.SpriteSheet({
+        image: kontra.imageAssets['assets/brick_animation'],
+        frameWidth: 96,
+        frameHeight: 96,
+        animations: {
+          destroy: {
+            frames: '0..4',
+            frameRate: 10,
+            loop: false
+          }
+        }
+    });
+
+    let brick = kontra.Sprite({
+        x: 1000,
+        y: 0,
+        animations: brickSpriteSheet.animations
+    });
+
     // Player and enemies
     let enemies = createEnemies(tileEngine);
-    let player = createPlayer(tileEngine);
+    let player = createPlayer(tileEngine, brick);
     tileEngine.addObject(player);
     enemies.map( enemy => tileEngine.addObject(enemy));
+    tileEngine.addObject(brick);
 
     // Debug stuff
     let gridSprite = createDebugGrid(tileEngine);
@@ -170,6 +191,8 @@ function startGame() {
                 gridSprite.x = tileEngine.sx;
             }
 
+            brick.update();
+
         },
         render: function() {
             earth.render();
@@ -180,6 +203,8 @@ function startGame() {
 
             enemies = enemies.filter(enemy => enemy.isAlive());
             enemies.map(enemy => enemy.render());
+
+            brick.render();
 
             // gridSprite.render();
         }

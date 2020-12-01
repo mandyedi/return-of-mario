@@ -1,6 +1,6 @@
 import { Rect, rectIntersection, rectIntersectsRect } from './rect.js';
 
-export default function createPlayer(tileEngine) {
+export default function createPlayer(tileEngine, brick) {
     let canvas = kontra.getCanvas();
 
     let playerObject = tileEngine.layerMap['player'].objects[0];
@@ -93,8 +93,11 @@ export default function createPlayer(tileEngine) {
                                     // Setting it to 0 only affects the layer's data array, but keeps the tile imaged on canvas.
                                     // My solution is to use tha background layer (player and enemies do not collide with it) with a tile that has the same color then the backgroun.
                                     if ( tileEngine.tileAtLayer("ground", {row: tileCoord.y, col: tileCoord.x}) == 3) {
+                                        brick.x = (tileCoord.x - 1) * tileEngine.tilewidth;
+                                        brick.y = (tileCoord.y - 1) * tileEngine.tileheight; 
+                                        brick.playAnimation('destroy');
                                         tileEngine.setTileAtLayer('ground', {row: tileCoord.y, col: tileCoord.x}, 0);
-                                        tileEngine.setTileAtLayer('background', {row: tileCoord.y, col: tileCoord.x}, 7);
+                                        tileEngine.setTileAtLayer('background', {row: tileCoord.y, col: tileCoord.x}, 8);
                                     }
                                 }
                             }
