@@ -21,6 +21,7 @@ export default function createEnemies(tileEngine) {
     
             // Custom paramters
             speed: -96,
+            active: false,
 
             getRect() {
                 return new Rect(this.x, this.y, this.width, this.height);

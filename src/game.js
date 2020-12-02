@@ -6,7 +6,6 @@ TODO:
 - 
 
 Graphics
-  Background - Space with stars
   Background - Mountain
   Background - Rock
   Coin
@@ -19,8 +18,6 @@ Animated
 
 Build full level.
 
-Add trigger option to enemies: enemy start moving when appears in the canvas.
-
 HUD (Heads Up Display).
 Score, coins, world, time, lives.
 
@@ -29,7 +26,6 @@ Times up, player falls, collides with enemy.
 
 Use Kontra scene.
 Welcome scene, game scene, game over scene.
-Scene also has cullObjects feature but need to look up that how it affects the enemy trigger feature.
 
 -
 - Future
@@ -40,7 +36,9 @@ PLayer states: small and big.
 Pipe takes the player to bonus level.
 
 Create particle system for brick animation.
-Support multiple brick destroy.
+Support multiple brick destroy, but not at the same time.
+
+Enemies collide with each other.
 
 */
 
@@ -171,19 +169,24 @@ function startGame() {
             player.update(dt);
 
             enemies.map(enemy => {
-                enemy.update(dt);
-                testEnemyCollisionWithGroundLayer(enemy, tileEngine);
+                if (enemy.active == true) {
+                    enemy.update(dt);
+                    testEnemyCollisionWithGroundLayer(enemy, tileEngine);
 
-                let rectPlayer = player.getRect();
-                let rectEnemy = enemy.getRect();
-                if (rectIntersectsRect(rectPlayer, rectEnemy)) {
-                    if (intersectionSide(rectPlayer, rectEnemy) == 'top') {
-                        enemy.ttl = 0;
+                    let rectPlayer = player.getRect();
+                    let rectEnemy = enemy.getRect();
+                    if (rectIntersectsRect(rectPlayer, rectEnemy)) {
+                        if (intersectionSide(rectPlayer, rectEnemy) == 'top') {
+                            enemy.ttl = 0;
+                        }
+                        else {
+                            // TODO: handle game over
+                        }
+                        
                     }
-                    else {
-                        // TODO: handle game over
-                    }
-                    
+                }
+                else if (enemy.active == false && tileEngine.sx + canvas.width >= enemy.x) {
+                    enemy.active = true;
                 }
             });
 

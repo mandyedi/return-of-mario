@@ -59,6 +59,61 @@
                  "width":32,
                  "x":704,
                  "y":352
+                }, 
+                {
+                 "height":32,
+                 "id":3,
+                 "name":"enemy1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1312,
+                 "y":352
+                }, 
+                {
+                 "height":32,
+                 "id":4,
+                 "name":"enemy1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1600,
+                 "y":352
+                }, 
+                {
+                 "height":32,
+                 "id":5,
+                 "name":"enemy1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1648,
+                 "y":352
+                }, 
+                {
+                 "height":32,
+                 "id":6,
+                 "name":"enemy1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":2560,
+                 "y":96
+                }, 
+                {
+                 "height":32,
+                 "id":7,
+                 "name":"enemy1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":2624,
+                 "y":96
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -79,7 +134,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":3,
+ "nextobjectid":8,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.4.2",
