@@ -20,7 +20,80 @@
 </head>
 <body>
     <canvas width="800" height="448"></canvas>
-    
-    <script src="src/game.js" type="module"></script>
+    <script>
+        kontra.init();
+        kontra.initKeys();
+        kontra.initPointer();
+    </script>
+    <script type="module">
+        import startScene from './src/scenes/startScene.js';
+        import mapScene from './src/scenes/mapScene.js';
+        import mapFinishedScene from './src/scenes/mapFinishedScene.js';
+        import gameOverScene from './src/scenes/gameOverScene.js';
+
+        // Info about the asset loading process
+        let numAssets = 1;
+        let assetsLoaded = 0;
+        kontra.on('assetLoaded', (asset, url) => {
+            assetsLoaded++;
+            console.log("asset loaded: " + url);
+            // TODO: Inform user, udate progress bar
+        });
+
+        // TODO: refactor asset load
+        //       save every map in different json file
+        //       load the actual map in mapScene
+        //       delete unused map data
+        //          research: proper way to delete data in javaScript
+        //          research: is there any delete or remove functionality in kontra?
+        kontra.load(
+            'assets/tiles.png',
+            'assets/map.json',
+            'assets/player_big.png',
+            'assets/enemy1.png',
+            'assets/earth.png',
+            'assets/brick_animation.png'
+        ).then(assets => {
+            startGame();
+        }).catch(err => {
+            console.log("Error: " + err);
+            // TODO: handle error
+        });
+
+        function startGame() {
+            let activeScene = startScene;
+
+            let loop = kontra.GameLoop({
+                update(dt) {
+                    activeScene.update(dt);
+                },
+                render() {
+                    activeScene.render();
+                }
+            });
+
+            kontra.on('navigate', (name) => {
+                switch(name) {
+                    case 'map':
+                        activeScene.hide();
+                        mapScene.show();
+                        activeScene = mapScene;
+                        break;
+                    case 'finish':
+                        activeScene.hide();
+                        mapFinishedScene.show();
+                        activeScene = mapFinishedScene;
+                        break;
+                    case 'over':
+                        activeScene.hide();
+                        gameOverScene.show();
+                        activeScene = gameOverScene;
+                        break;
+                }
+            });
+
+            loop.start();
+        }
+    </script>
 </body>
 </html>

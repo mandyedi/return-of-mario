@@ -20,13 +20,15 @@ If anyone has a greate idea or find any bug feel free to open an issue the origi
   Score, coins, world, time, lives
 - [ ] Game over  
   Times up, player falls, collides with enemy
-- [ ] Use Kontra scene  
+- [x] Use Kontra Scene  
   Welcome scene, game scene, game over scene
 - [ ] Player states: small and big  
 - [ ] Pipe takes the player to bonus level  
 - [ ] Create particle system for brick animation  
   Support multiple brick destroy, but not at the same time.
 - [ ] Enemies collide with each other
+- [ ] Navigate menu with keyboard
+- [ ] Use WASD to move player
 
 ## Done
 - [x] Organize source code. Use separate files for different entities and logic.
