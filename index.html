@@ -74,6 +74,11 @@
 
             kontra.on('navigate', (name) => {
                 switch(name) {
+                    case 'start':
+                        activeScene.hide();
+                        startScene.show();
+                        activeScene = startScene;
+                        break;
                     case 'map':
                         activeScene.hide();
                         mapScene.show();

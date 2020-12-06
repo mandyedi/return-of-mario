@@ -18,17 +18,22 @@ If anyone has a greate idea or find any bug feel free to open an issue the origi
 - [ ] Build full level
 - [ ] HUD (Heads Up Display)  
   Score, coins, world, time, lives
-- [ ] Game over  
+- [x] Game over  
   Times up, player falls, collides with enemy
+- [ ] Game over animation, player falls
 - [x] Use Kontra Scene  
   Welcome scene, game scene, game over scene
-- [ ] Player states: small and big  
+- [ ] Player sizes: small and big  
 - [ ] Pipe takes the player to bonus level  
 - [ ] Create particle system for brick animation  
   Support multiple brick destroy, but not at the same time.
 - [ ] Enemies collide with each other
 - [ ] Navigate menu with keyboard
 - [ ] Use WASD to move player
+- [ ] Add sprint
+- [ ] Left and right movement speed increasing while buttons are down
+- [ ] Jump velocity increasing while up button is down
+- [ ] Add player states: alive, going down in pipe, reach flag, upgrade or downgrade, dies
 
 ## Done
 - [x] Organize source code. Use separate files for different entities and logic.

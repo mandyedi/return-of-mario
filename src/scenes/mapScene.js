@@ -47,13 +47,17 @@ function testEnemyCollisionWithGroundLayer(sprite, tileEngine) {
 
 let mapScene = kontra.Scene({
     id: 'map',
+    gameOver: false,
+    timer: 0,
     tileEngine: undefined,
     brick: undefined,
     enemies: undefined,
     player: undefined,
     earth: undefined,
 
-    show: function() {
+    onShow: function() {
+        this.gameOver = false;
+        this.timer = 0;
         let mapAsset = kontra.dataAssets['assets/map'];
         this.tileEngine = kontra.TileEngine(mapAsset);
         this.tileEngine.sx = 0;
@@ -94,34 +98,54 @@ let mapScene = kontra.Scene({
     },
 
     update: function(dt) {
-        this.player.update(dt);
+        if (this.gameOver) {
+            // TODO: game over animation
+            if (this.timer > 3) {
+                kontra.emit('navigate', 'over');
+            }
+            this.timer += dt;
+        }
+        else {
+            if (this.timer > 400) {
+                kontra.emit('navigate', 'over');
+            }
+            this.timer += dt;
 
-        this.enemies.map(enemy => {
-            if (enemy.active == true) {
-                enemy.update(dt);
-                testEnemyCollisionWithGroundLayer(enemy, this.tileEngine);
+            this.player.update(dt);
 
-                let rectPlayer = this.player.getRect();
-                let rectEnemy = enemy.getRect();
-                if (rectIntersectsRect(rectPlayer, rectEnemy)) {
-                    if (intersectionSide(rectPlayer, rectEnemy) == 'top') {
-                        enemy.ttl = 0;
-                        this.player.ddy -= 950 * dt;  // jump impulse
-                        this.player.jumping = true;
-                        this.player.advance();
+            this.enemies.map(enemy => {
+                if (enemy.active == true) {
+                    enemy.update(dt);
+                    testEnemyCollisionWithGroundLayer(enemy, this.tileEngine);
+
+                    let rectPlayer = this.player.getRect();
+                    let rectEnemy = enemy.getRect();
+                    if (rectIntersectsRect(rectPlayer, rectEnemy)) {
+                        if (intersectionSide(rectPlayer, rectEnemy) == 'top') {
+                            enemy.ttl = 0;
+                            this.player.ddy -= 950 * dt;  // jump impulse
+                            this.player.jumping = true;
+                            this.player.advance();
+                        }
+                        else {
+                            this.timer = 0;
+                            this.gameOver = true;
+                        }
+                        
                     }
-                    else {
-                        // TODO: handle game over
-                    }
-                    
                 }
-            }
-            else if (enemy.active == false && this.tileEngine.sx + canvas.width >= enemy.x) {
-                enemy.active = true;
-            }
-        });
+                else if (enemy.active == false && this.tileEngine.sx + canvas.width >= enemy.x) {
+                    enemy.active = true;
+                }
+            });
 
-        this.brick.update();
+            if (this.player.y + this.player.height >= this.tileEngine.tileheight * this.tileEngine.height) {
+                this.timer = 0;
+                this.gameOver = true;
+            }
+
+            this.brick.update();
+        }
     },
 
     render: function() {
