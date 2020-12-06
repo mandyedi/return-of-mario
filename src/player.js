@@ -1,6 +1,6 @@
 import { Rect, rectIntersection, rectIntersectsRect } from './rect.js';
 
-export default function createPlayer(tileEngine, brick) {
+export default function createPlayer(tileEngine, brick, hud) {
     let canvas = kontra.getCanvas();
 
     let playerObject = tileEngine.layerMap['player'].objects[0];
@@ -98,6 +98,7 @@ export default function createPlayer(tileEngine, brick) {
                                         brick.playAnimation('destroy');
                                         tileEngine.setTileAtLayer('ground', {row: tileCoord.y, col: tileCoord.x}, 0);
                                         tileEngine.setTileAtLayer('background', {row: tileCoord.y, col: tileCoord.x}, 8);
+                                        hud.updatePoints(50);
                                     }
                                 }
                             }

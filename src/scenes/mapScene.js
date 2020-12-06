@@ -1,6 +1,7 @@
 import createPlayer from '../player.js';
 import createEnemies from '../enemy.js';
 import { rectIntersectsRect, intersectionSide } from '../rect.js';
+import hud from '../hud.js';
 
 let canvas = kontra.getCanvas();
 
@@ -63,6 +64,14 @@ let mapScene = kontra.Scene({
         this.tileEngine.sx = 0;
         this.tileEngine.sy = 0;
 
+        hud.reset();
+
+        this.tileEngine.properties.map(property => {
+            if (property.name == 'name') {
+                hud.updateWorld(property.value);
+            }
+        });
+
         let brickSpriteSheet = kontra.SpriteSheet({
             image: kontra.imageAssets['assets/brick_animation'],
             frameWidth: 96,
@@ -85,7 +94,7 @@ let mapScene = kontra.Scene({
         this.enemies = createEnemies(this.tileEngine);
         this.enemies.map( enemy => this.tileEngine.addObject(enemy));
 
-        this.player = createPlayer(this.tileEngine, this.brick);
+        this.player = createPlayer(this.tileEngine, this.brick, hud);
         this.tileEngine.addObject(this.player);
         
         this.earth = kontra.Sprite({
@@ -126,6 +135,7 @@ let mapScene = kontra.Scene({
                             this.player.ddy -= 950 * dt;  // jump impulse
                             this.player.jumping = true;
                             this.player.advance();
+                            hud.updatePoints(100);
                         }
                         else {
                             this.timer = 0;
@@ -145,6 +155,8 @@ let mapScene = kontra.Scene({
             }
 
             this.brick.update();
+
+            hud.update(dt);
         }
     },
 
@@ -159,6 +171,8 @@ let mapScene = kontra.Scene({
         this.enemies.map(enemy => enemy.render());
 
         this.brick.render();
+
+        hud.render();
     }
 });
 

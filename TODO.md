@@ -12,12 +12,13 @@ If anyone has a greate idea or find any bug feel free to open an issue the origi
 - [ ] Enemy
 - [ ] Brick - bonus
 - [ ] Coin
+- [ ] Coin on HUD
 
 ## Other
 
 - [ ] Build full level
-- [ ] HUD (Heads Up Display)  
-  Score, coins, world, time, lives
+- [x] HUD (Heads Up Display)  
+  Score, coins, world, time
 - [x] Game over  
   Times up, player falls, collides with enemy
 - [ ] Game over animation, player falls
