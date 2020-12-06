@@ -106,6 +106,9 @@ let mapScene = kontra.Scene({
                 if (rectIntersectsRect(rectPlayer, rectEnemy)) {
                     if (intersectionSide(rectPlayer, rectEnemy) == 'top') {
                         enemy.ttl = 0;
+                        this.player.ddy -= 950 * dt;  // jump impulse
+                        this.player.jumping = true;
+                        this.player.advance();
                     }
                     else {
                         // TODO: handle game over
